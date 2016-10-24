@@ -27,7 +27,7 @@ def login():
     params = request.args  if request.method == 'GET' else request.form
     username = params.get('username','')
     password = params.get('password','')
-
+    print username,password
     if user.validate_login(username,password):
         return redirect('/logs/')
     return render_template('login.html',username=username,error='username or password is error')
