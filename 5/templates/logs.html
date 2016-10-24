@@ -5,6 +5,25 @@
     <title>{{title}}</title>
 </head>
 <body>
-<h1>log list</h1>
+    <table border="1px">
+        <thead>
+            <tr>
+                <th>IP地址</th>
+                <th>URL</th>
+                <th>CODE</th>
+                <th>总数</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for node in rt_list %}
+                <tr>
+                    <td>{{ node[0][0] }}</td>
+                    <td>{{ node[0][1] }}</td>
+                    <td>{{ node[0][2] }}</td>
+                    <td>{{ node[1] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
