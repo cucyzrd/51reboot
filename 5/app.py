@@ -4,6 +4,7 @@ from flask import Flask
 import loganalysis
 from flask import render_template
 from flask import request
+import user
 app = Flask(__name__)
 
 @app.route('/logs/')
@@ -26,9 +27,10 @@ def login():
     params = request.args  if request.method == 'GET' else request.form
     username = params.get('username','')
     password = params.get('password','')
-    print username
-    print password
-    return 'LL'
+
+    if user.validate_login(username,password):
+        return '登入成功'
+    return render_template('login.html',username=username,error='username or password is error')
 
 if __name__ == '__main__':
     print app.url_map
