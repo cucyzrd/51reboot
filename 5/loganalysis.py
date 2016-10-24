@@ -26,12 +26,16 @@ def get_topn(logfile, topn=10):
     rt_list = rt_dict.items()
     # [(key, value), (key, value)]
 
-    for j in range(0, topn):
-        for i in range(0, len(rt_list) - 1):
-            if rt_list[i][1] > rt_list[i + 1][1]:
-                temp = rt_list[i]
-                rt_list[i] = rt_list[i + 1]
-                rt_list[i + 1] = temp
+    # 冒泡排序
+    # for j in range(0, topn):
+    #     for i in range(0, len(rt_list) - 1):
+    #         if rt_list[i][1] > rt_list[i + 1][1]:
+    #             temp = rt_list[i]
+    #             rt_list[i] = rt_list[i + 1]
+    #             rt_list[i + 1] = temp
+
+    # 使用sorted代替
+    rt_list = sorted(rt_list, key=lambda x:x[1],reverse=True)
     return rt_list[-1:-topn-1:-1]
 ###############################################
     # page_tpl = '''
@@ -69,5 +73,5 @@ def get_topn(logfile, topn=10):
 if __name__ == '__main__':
     logfile = 'www_access_20140823.log'
 
-    print get_topn(topn=5, logfile=logfile)
+    print get_topn(topn=50, logfile=logfile)
     print get_topn(logfile=logfile)
