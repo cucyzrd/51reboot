@@ -9,7 +9,7 @@ app = Flask(__name__)
 def logs():
     logfile = 'www_access_20140823.log'
     rt_list = loganalysis.get_topn(logfile=logfile)
-    return render_template('logs.html')
+    return render_template('logs.html',rt_list=rt_list,title='top n log')
 
 @app.route('/')
 def index():
