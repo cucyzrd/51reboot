@@ -27,11 +27,13 @@ def login():
     params = request.args  if request.method == 'GET' else request.form
     username = params.get('username','')
     password = params.get('password','')
-    print username,password
-    if user.validate_login(username,password):
-        return redirect('/logs/')
-    return render_template('login.html',username=username,error='username or password is error')
 
+    if user.validate_login(username,password):
+        return redirect('/users/')
+    return render_template('login.html',username=username,error='username or password is error')
+@app.route('/users/')
+def users():
+    return render_template('users.html',user_list=user.get_users())
 if __name__ == '__main__':
     print app.url_map
     app.run(port=2000,debug=True)
