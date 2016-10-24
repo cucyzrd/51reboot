@@ -19,7 +19,12 @@ def logs():
 
 @app.route('/')
 def index():
-    return '<h1>hello world</h1>'
+    return render_template('login.html')
+
+@app.route('/login/',methods=['POST','GET'])
+def login():
+
+    return 'LL'
 
 if __name__ == '__main__':
     print app.url_map
