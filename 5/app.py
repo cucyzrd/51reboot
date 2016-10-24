@@ -9,8 +9,11 @@ app = Flask(__name__)
 @app.route('/logs/')
 def logs():
     logfile = 'www_access_20140823.log'
-    rt_list = loganalysis.get_topn(logfile=logfile)
-    print request.args
+
+    topn = request.args.get('topn',10)
+    topn = int(topn) if topn.isdigit() else 10
+
+    rt_list = loganalysis.get_topn(logfile=logfile,topn=topn)
     return render_template('logs.html',rt_list=rt_list,title='top n log')
 
 @app.route('/')
