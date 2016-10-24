@@ -23,7 +23,8 @@ def index():
 
 @app.route('/login/',methods=['POST','GET'])
 def login():
-
+    print request.args
+    print request.form
     return 'LL'
 
 if __name__ == '__main__':
