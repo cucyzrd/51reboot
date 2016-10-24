@@ -1,6 +1,6 @@
 #encoding:utf-8
 
-def loganalysis(logfile, topn=10):
+def get_topn(logfile, topn=10):
 
     fhandler = open(logfile, 'r')
 
@@ -32,42 +32,42 @@ def loganalysis(logfile, topn=10):
                 temp = rt_list[i]
                 rt_list[i] = rt_list[i + 1]
                 rt_list[i + 1] = temp
-
-
-    page_tpl = '''
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <meta charset="utf-8"/>
-            <title>{title}</title>
-        </head>
-        <body>
-            <table>
-                <thead>
-                    <tr>
-                       {thead}
-                    </tr>
-                </thead>
-                <tbody>
-                    {tbody}
-                </tbody>
-            </table>
-        </body>
-    </html>
-    '''
-
-    title = 'TOP %s 访问日志' % topn
-    thead = '<th>IP</th><th>URL</th><th>Code</th><th>次数</th>'
-    tbody = ''
-
-    for node in rt_list[-1:-topn - 1:-1]:
-        tbody += '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % \
-        (node[1], node[0][0], node[0][1], node[0][2])
-
-    return page_tpl.format(title=title, thead=thead, tbody=tbody)
+    return rt_list[-1:-topn-1:-1]
+###############################################
+    # page_tpl = '''
+    # <!DOCTYPE html>
+    # <html>
+    #     <head>
+    #         <meta charset="utf-8"/>
+    #         <title>{title}</title>
+    #     </head>
+    #     <body>
+    #         <table>
+    #             <thead>
+    #                 <tr>
+    #                    {thead}
+    #                 </tr>
+    #             </thead>
+    #             <tbody>
+    #                 {tbody}
+    #             </tbody>
+    #         </table>
+    #     </body>
+    # </html>
+    # '''
+    #
+    # title = 'TOP %s 访问日志' % topn
+    # thead = '<th>IP</th><th>URL</th><th>Code</th><th>次数</th>'
+    # tbody = ''
+    #
+    # for node in rt_list[-1:-topn - 1:-1]:
+    #     tbody += '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % \
+    #     (node[1], node[0][0], node[0][1], node[0][2])
+    #
+    # return page_tpl.format(title=title, thead=thead, tbody=tbody)
 
 if __name__ == '__main__':
     logfile = 'www_access_20140823.log'
 
-    print loganalysis(topn=5, logfile=logfile)
-    print loganalysis(logfile=logfile)
+    print get_topn(topn=5, logfile=logfile)
+    print get_topn(logfile=logfile)
