@@ -5,15 +5,15 @@ import loganalysis
 from flask import render_template
 from flask import request
 import user
+from flask import redirect
 app = Flask(__name__)
 
 @app.route('/logs/')
 def logs():
     logfile = 'www_access_20140823.log'
 
-    topn = request.args.get('topn',10)
+    topn = request.args.get('topn','10')
     topn = int(topn) if topn.isdigit() else 10
-
 
     rt_list = loganalysis.get_topn(logfile=logfile,topn=topn)
     return render_template('logs.html',rt_list=rt_list,title='top n log')
@@ -29,7 +29,7 @@ def login():
     password = params.get('password','')
 
     if user.validate_login(username,password):
-        return '登入成功'
+        return redirect('/logs/')
     return render_template('login.html',username=username,error='username or password is error')
 
 if __name__ == '__main__':
