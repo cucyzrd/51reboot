@@ -13,6 +13,7 @@ def logs():
     topn = request.args.get('topn',10)
     topn = int(topn) if topn.isdigit() else 10
 
+
     rt_list = loganalysis.get_topn(logfile=logfile,topn=topn)
     return render_template('logs.html',rt_list=rt_list,title='top n log')
 
