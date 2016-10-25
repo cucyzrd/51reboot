@@ -19,7 +19,8 @@
                     <td>{{ user['username']}}</td>
                     <td>{{ user['age']}}</td>
                     <td>
-                        <a href="/user/find/?username={{user['username']}}">更新</a>
+                        <a href="/user/find/?username={{user['username']}}">修改</a>
+                        <a href="/user/find/?username={{user['username']}}">删除</a>
                     </td>
                 </tr>
             {% endfor %}
