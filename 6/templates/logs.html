@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <a href="/logs/?topn=25">top 25</a>
+    <a href="/logs/?topn=50">top 50</a>
+    <a href="/logs/?topn=100">top 100</a>
+    <table border="1px">
+        <thead>
+            <tr>
+                <th>IP地址</th>
+                <th>URL</th>
+                <th>CODE</th>
+                <th>总数</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for node in rt_list %}
+                <tr>
+                    <td>{{ node[0][0] }}</td>
+                    <td>{{ node[0][1] }}</td>
+                    <td>{{ node[0][2] }}</td>
+                    <td>{{ node[1] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
