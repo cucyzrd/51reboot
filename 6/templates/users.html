@@ -5,6 +5,8 @@
     <title>用户列表</title>
 </head>
 <body>
+     <a href="/user/create/">添加用户</a>
+
     <table border="1px">
         <thead>
             <tr>
@@ -14,13 +16,13 @@
             </tr>
         </thead>
         <tbody>
-            {% for user in user_list %}
+            {% for user in users %}
                 <tr>
                     <td>{{ user['username']}}</td>
                     <td>{{ user['age']}}</td>
                     <td>
-                        <a href="/user/find/?username={{user['username']}}">修改</a>
-                        <a href="/user/find/?username={{user['username']}}">删除</a>
+                        <a href="/user/modify/?username={{user['username']}}">修改</a>
+                        <a href="/user/delete/?username={{user['username']}}">删除</a>
                     </td>
                 </tr>
             {% endfor %}

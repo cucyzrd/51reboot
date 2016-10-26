@@ -6,6 +6,11 @@ from flask import render_template
 from flask import request
 import user
 from flask import redirect, url_for
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+
 app = Flask(__name__)
 
 """
@@ -36,14 +41,16 @@ def login():
 def users():
     # 获取所有用户信息
     _users = user.get_users()
+    # print _users
     return render_template('users.html',users=_users)
 
 """
 跳转到新建用户信息输入页面
 """
-@app.route('/user/crate/')
+@app.route('/user/create/')
 def create_user():
-    render_template('user_create.html')
+   return render_template('user_create.html')
+
 
 """
 存储新建用户的信息
@@ -53,12 +60,12 @@ def add_user():
     username = request.form.get('username','')
     password = request.form.get('password','')
     age = request.form.get('age','')
-
+    print username,password,age
     #     check user information
-    _is_ok,_error = user.validate_add_user(username.password,age)
+    _is_ok,_error = user.validate_add_user(username,password,age)
     if _is_ok:
         user.add_user(username,password,age)
-        return redirect(url_for('users',action='create'))  # 跳转到用户列表页
+        return redirect(url_for('users', msg='新建成功'))  # 跳转到用户列表页
     else:
         #跳转到新用户创建页面，回显错误户信息& 用户信息
         return render_template('user_create.html', \
@@ -66,13 +73,14 @@ def add_user():
                         username=username, \
                         password=password, age=age)
 
+
 """
 打开用户信息修改页面
 """
 @app.route('/user/modify/')
 def modify_user():
     username = request.args.get('username','')
-    _user = user.get_users(username)
+    _user = user.get_user(username)
     _error = ''
     _username = ''
     _password = ''
@@ -81,19 +89,19 @@ def modify_user():
         _error = '用户下信息不存在'
     else:
         _username = _user.get('username')
-        _password = _password.get('password')
+        _password = _user.get('password')
         _age = _user.get('age')
     return render_template('user_modify.html',error=_error,password=_password,age=_age,username=_username)
 
 """
 保存修改用户数据
 """
-@app.route('/user/update',methods=['POST'])
+@app.route('/user/update/',methods=['POST'])
 def update_user():
     username = request.form.get('username','')
     password = request.form.get('password','')
     age = request.form.get('age','')
-
+    # print username,password,age
     # 检查用户信息
     _is_ok,_error = user.validate_update_user(username,password,age)
     if _is_ok:
@@ -101,6 +109,8 @@ def update_user():
         return redirect('/users/')
     else:
         return render_template('user_modify.html',error=_error,username=username,password=password,age=age)
+
+
 
 """
 删除用户
