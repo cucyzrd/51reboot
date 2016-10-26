@@ -128,6 +128,17 @@ def delete_user():
     user.delete_user(username)
     return redirect('/users/')
 
+'''
+登出
+'''
+
+@app.route('/logout/')
+def logout():
+    session.clear()
+    print session
+    return redirect('/')
+
+
 """
 日志界面
 """
