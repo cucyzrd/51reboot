@@ -1,32 +1,53 @@
 # -*- coding: utf-8 -*-
 # __author__ = 'zhourudong'
 import  time
+from  functools import wraps
+
+# wraps å¯ä»¥é˜²æ­¢ä¿®æ”¹å…¶ä»–å‡½æ•°åå­—
+
+
+"""
+è®°å½•æ—¥å¿—
+"""
+def log_wrapper(func):
+    @wraps(func)
+    def wrapper():
+        print 'æ—¥å¿—è®°å½•å¼€å§‹:%s' % func.__name__
+        rt = func()
+        print 'æ—¥å¿—è®°å½•ç»“æŸ:%s' % func.__name__
+        return rt
+    return wrapper
 
 '''
-¼ÇÂ¼Ã¿¸öº¯ÊıµÄÖ´ĞĞÊ±¼ä
+è®°å½•æ¯ä¸ªå‡½æ•°çš„æ‰§è¡Œæ—¶é—´
 '''
 def time_wrapper(func):
+    @wraps(func)
     def wrapper():
-        print '¼ÆÊ±¿ªÊ¼:%s' % func.__name__
+        print 'è®¡æ—¶å¼€å§‹:%s' % func.__name__
         start = time.time()
         rt = func()
         exec_time = time.time() - start
-        print '¼ÆÊ±½áÊø:%s==>:%s' % (func.__name__,time.time()- start)
+        print 'è®¡æ—¶ç»“æŸ:%s==>:%s' % (func.__name__,time.time()- start)
         return rt
     return wrapper
 
 
 
+@log_wrapper
 def test1():
     print 'test1'
+
+@time_wrapper
 def test2():
     print 'test2'
 
-@time_wrapper
+
 def test3():
     time.sleep(2)
     print 'test3'
 
+@log_wrapper
 @time_wrapper
 def test4():
     time.sleep(3)
@@ -34,23 +55,25 @@ def test4():
     return 4
 
 '''
-ÔÚËùÓĞº¯ÊıÖ®Ç°Ö´ĞĞÒ»¿é´úÂë
-ÔÚËùÓĞº¯ÊıÖ®ºóÖ´ĞĞÒ»¿é´úÂë
+åœ¨æ‰€æœ‰å‡½æ•°ä¹‹å‰æ‰§è¡Œä¸€å—ä»£ç 
+åœ¨æ‰€æœ‰å‡½æ•°ä¹‹åæ‰§è¡Œä¸€å—ä»£ç 
 '''
 
 def wrapper(func):
-    print 'Ö´ĞĞÖ®Ç° %s' % func.__name__
+    print 'æ‰§è¡Œä¹‹å‰ %s' % func.__name__
     rt = func()
-    print 'Ö´ĞĞÒÔºó %s' % func.__name__
+    print 'æ‰§è¡Œä»¥å %s' % func.__name__
     return rt
 
 '''
-µ÷ÓÃµÄÎ»ÖÃ¶¼µÃ¸Ä
+è°ƒç”¨çš„ä½ç½®éƒ½å¾—æ”¹
 '''
-print wrapper(test1)
-print wrapper(test2)
-print wrapper(test3)
-print wrapper(test4)
+# print wrapper(test1)
+# print wrapper(test2)
+# print wrapper(test3)
+# print wrapper(test4)
 
-test3()
-test4()
+test1()  # åªè®°å½•æ—¥å¿—
+test2()
+test3() # åªè®°å½•æ—¶é—´
+test4() # è®°å½•æ—¶é—´ã€æ—¥å¿—
