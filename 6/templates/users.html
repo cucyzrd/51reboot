@@ -5,6 +5,7 @@
     <title>用户列表</title>
 </head>
 <body>
+    欢迎{{session.get('user', {}).get('username', '')}}<br/>
      <a href="/user/create/">添加用户</a>
      <a href="/logout/">退出登录</a>
     <table border="1px">
