@@ -10,11 +10,24 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 from flask import  session
-
+from functools import wraps
 
 app = Flask(__name__)
 # 随机字符
 app.secret_key = os.urandom(32)
+
+def login_required(func):
+    @wraps(func)
+    def waapper(*args, **kwargs):
+        # 内部去执行函数，且拿到返回值，并返回返回值
+        if session.get('user') is None:
+            # 如果没有session信息跳转到登入页面
+            return redirect('/')
+        rt = func()
+        return rt
+    return waapper
+
+
 
 """
 打开用户登录界面
@@ -55,6 +68,7 @@ def users():
 跳转到新建用户信息输入页面
 """
 @app.route('/user/create/')
+@login_required
 def create_user():
    return render_template('user_create.html')
 
@@ -63,6 +77,7 @@ def create_user():
 存储新建用户的信息
 """
 @app.route('/user/add/',methods=['post'])
+@login_required
 def add_user():
     username = request.form.get('username','')
     password = request.form.get('password','')
