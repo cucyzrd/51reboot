@@ -11,7 +11,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 from flask import  session
 from functools import wraps
-
+from flask import  flash
 app = Flask(__name__)
 # 随机字符
 app.secret_key = os.urandom(32)
@@ -87,6 +87,7 @@ def add_user():
     _is_ok,_error = user.validate_add_user(username,password,age)
     if _is_ok:
         user.add_user(username,password,age)
+        flash('新加用户{}添加成功'.format(username))
         return redirect(url_for('users', msg='新建成功'))  # 跳转到用户列表页
     else:
         #跳转到新用户创建页面，回显错误户信息& 用户信息
@@ -100,6 +101,7 @@ def add_user():
 打开用户信息修改页面
 """
 @app.route('/user/modify/')
+@login_required
 def modify_user():
     username = request.args.get('username','')
     _user = user.get_user(username)
@@ -128,6 +130,7 @@ def update_user():
     _is_ok,_error = user.validate_update_user(username,password,age)
     if _is_ok:
         user.update_user(username,password,age)
+        flash('修改用户信息成功')
         return redirect('/users/')
     else:
         return render_template('user_modify.html',error=_error,username=username,password=password,age=age)
@@ -141,6 +144,7 @@ def update_user():
 def delete_user():
     username = request.args.get('username')
     user.delete_user(username)
+    flash('删除用户信息成功')
     return redirect('/users/')
 
 '''
