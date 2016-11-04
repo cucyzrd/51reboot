@@ -54,6 +54,7 @@ def user_save():
 @app.route('/user/view/')
 def user_view():
     user = models.get_user_by_id(request.args.get('id', 0))
+    print user
     return render_template('user_view.html', id=user.get('id', ''), username=user.get('name', ''), age=user.get('age', ''))
 '''
 用户修改
@@ -78,6 +79,14 @@ def delete_user():
     # print uid
     models.delete_user(uid)
     return redirect('/users/')
+
+'''
+登出
+'''
+
+@app.route('/logout/')
+def logout():
+    return redirect('/')
 
 
 @app.route('/log/')

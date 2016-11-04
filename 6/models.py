@@ -21,43 +21,51 @@ SQL_VALIDATE_USER_MODIFY = 'select id from user where id != %s and name = %s'
 
 SQL_USER_DELETE = 'DELETE FROM `zrd`.`user` WHERE  `id`=%s'
 
-def get_users():
+# 数据库连接
+
+def execu_sql(sql, args, is_fetch):
+    rt_cnt = 0
+    rt_list = []
     conn = MySQLdb.connect(host=gconf.MYSQL_HOST, \
-                            port=gconf.MYSQL_PORT, \
-                            user=gconf.MYSQL_USER, \
-                            passwd=gconf.MYSQL_PASSWD, \
-                            db=gconf.MYSQL_DB, \
-                            charset=gconf.MYSQL_CHARSET)
-
+                        port=gconf.MYSQL_PORT, \
+                        user=gconf.MYSQL_USER, \
+                        passwd=gconf.MYSQL_PASSWD, \
+                        db=gconf.MYSQL_DB, \
+                        charset=gconf.MYSQL_CHARSET)
     cursor = conn.cursor()
-
-    cursor.execute(SQL_USER_LIST)
-    rt_list = cursor.fetchall()
-
+    rt_cnt = cursor.execute(sql, args)
+    if is_fetch:
+        rt_list = cursor.fetchall()
+    else:
+        conn.commit()
     cursor.close()
     conn.close()
+    return rt_cnt, rt_list
+
+'''
+获取用户信息列表
+'''
+def get_users():
+    sql = SQL_USER_LIST
+    args = ()
+
+    rt_cnt, rt_list = execu_sql(sql,args,True)
 
     return [dict(zip(SQL_USER_LIST_COLUMNS, line)) for line in rt_list]
 
-
-
+'''
+用户登录检查
+'''
 def validate_login(username, password):
-    conn = MySQLdb.connect(host=gconf.MYSQL_HOST, \
-                            port=gconf.MYSQL_PORT, \
-                            user=gconf.MYSQL_USER, \
-                            passwd=gconf.MYSQL_PASSWD, \
-                            db=gconf.MYSQL_DB, \
-                            charset=gconf.MYSQL_CHARSET)
+    sql = SQL_VALIDATE_LOGIN
+    args = (username, password)
+    rt_cnt,rt_list = execu_sql(sql,args,True)
 
-    cursor = conn.cursor()
+    return None if rt_list is None else dict(zip(SQL_VALIDATE_LOGIN_COLUMNS, rt_list))
 
-    cursor.execute(SQL_VALIDATE_LOGIN, (username, password))
-    rt = cursor.fetchone()
-    cursor.close()
-    conn.close()
-
-    return None if rt is None else dict(zip(SQL_VALIDATE_LOGIN_COLUMNS, rt))
-
+'''
+新增用户前 检查
+'''
 def validate_user_save(username, password, age):
     if username.strip() == '':
         return False, 'username is empty'
@@ -73,39 +81,31 @@ def validate_user_save(username, password, age):
 
     return True, ''
 
+'''
+保存新增用户信息
+返回 True/False
+'''
 def user_save(username, password, age):
-    conn = MySQLdb.connect(host=gconf.MYSQL_HOST, \
-                            port=gconf.MYSQL_PORT, \
-                            user=gconf.MYSQL_USER, \
-                            passwd=gconf.MYSQL_PASSWD, \
-                            db=gconf.MYSQL_DB, \
-                            charset=gconf.MYSQL_CHARSET)
+    sql = SQL_USER_SAVE
+    args = (username, age, password)
+    rt_cnt ,rt_list = execu_sql(sql,args,False)
 
-    cursor = conn.cursor()
+    return rt_cnt != 0
 
-    cnt = cursor.execute(SQL_USER_SAVE, (username, age, password))
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return cnt != 0
-
+'''
+以ID获取用户信息
+返回 : {'age': xx, 'id': xx, 'name': xx}
+'''
 def get_user_by_id(uid):
-    conn = MySQLdb.connect(host=gconf.MYSQL_HOST, \
-                            port=gconf.MYSQL_PORT, \
-                            user=gconf.MYSQL_USER, \
-                            passwd=gconf.MYSQL_PASSWD, \
-                            db=gconf.MYSQL_DB, \
-                            charset=gconf.MYSQL_CHARSET)
+    sql = SQL_USER_BY_ID
+    args = (uid,)
+    rt_cnt, rt_list = execu_sql(sql,args,True)
+    return {} if rt_list is None else dict(zip(SQL_USER_BY_ID_COLUMNS, (rt_list[0][0],rt_list[0][1],rt_list[0][2])))
 
-    cursor = conn.cursor()
-    cursor.execute(SQL_USER_BY_ID, (uid,))
-    rt = cursor.fetchone()
-    cursor.close()
-    conn.close()
-
-    return {} if rt is None else dict(zip(SQL_USER_BY_ID_COLUMNS, rt))
-
-
+'''
+用户修改信息，合法性检查
+返回值 True/False
+'''
 def validate_user_modify(uid, username, age):
     if not get_user_by_id(uid):
         return False, 'user is not found'
@@ -116,62 +116,31 @@ def validate_user_modify(uid, username, age):
     if not str(age).isdigit() or int(age) < 1 or int(age) > 100:
         return False, 'age is not a between 1 and 100 integer'
 
-    conn = MySQLdb.connect(host=gconf.MYSQL_HOST, \
-                            port=gconf.MYSQL_PORT, \
-                            user=gconf.MYSQL_USER, \
-                            passwd=gconf.MYSQL_PASSWD, \
-                            db=gconf.MYSQL_DB, \
-                            charset=gconf.MYSQL_CHARSET)
-
-    cursor = conn.cursor()
-
-
-    cnt = cursor.execute(SQL_VALIDATE_USER_MODIFY, (uid, username.strip()))
-    cursor.close()
-    conn.close()
-    if cnt != 0:
+    sql = SQL_VALIDATE_USER_MODIFY
+    args = (uid, username.strip())
+    rt_cnt , rt_list = execu_sql(sql,args,False)
+    # 已用用户存在返回的值 必然不是0
+    if rt_cnt != 0:
         return False, 'username is same to other'
-
     return True, ''
 
+'''
+保存用户修改信息
+'''
 def user_modify(uid, username, age):
-    conn = MySQLdb.connect(host=gconf.MYSQL_HOST, \
-                            port=gconf.MYSQL_PORT, \
-                            user=gconf.MYSQL_USER, \
-                            passwd=gconf.MYSQL_PASSWD, \
-                            db=gconf.MYSQL_DB, \
-                            charset=gconf.MYSQL_CHARSET)
-
-    cursor = conn.cursor()
-
-    cnt = cursor.execute(SQL_USER_MODIFY, (username, age, uid))
-    conn.commit()
-    cursor.close()
-    conn.close()
+    sql = SQL_USER_MODIFY
+    args = (username, age, uid)
+    rt_cnt , rt_list = execu_sql(sql,args,False)
     return True
 
 """
 删除用户信息
 """
 def delete_user(uid):
-    conn = MySQLdb.connect(host=gconf.MYSQL_HOST, \
-                            port=gconf.MYSQL_PORT, \
-                            user=gconf.MYSQL_USER, \
-                            passwd=gconf.MYSQL_PASSWD, \
-                            db=gconf.MYSQL_DB, \
-                            charset=gconf.MYSQL_CHARSET)
-
-    cursor = conn.cursor()
-
-    cnt = cursor.execute(SQL_USER_DELETE, (uid))
-    conn.commit()
-    cursor.close()
-    conn.close()
+    sql = SQL_USER_DELETE
+    args = (uid,)
+    rt_cnt , rt_list = execu_sql(sql,args,False)
     return True
-
-
-
-
 
 def get_topn(src, topn=10):
     stat_dict = {}
