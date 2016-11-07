@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test html</title>
+   <script type="text/javascript" src="jquery-2.1.1.js"> </script>
+</head>
+<body>
+
+        <div>div1</div>
+        <div id="mydivid">div2</div>
+        <div class="mydivclass">div3</div>
+
+
+        <!--<input type="text" value="" id="a"/> +-->
+        <!--<input type="text" value="" id="b"/> =-->
+        <!--<input type="text" value="" id="c"/>-->
+        <!--<input type="button" value="a+b=?" onclick="add();"/>-->
+
+        <input type="text" value="" id="a"/> +
+        <input type="text" value="" id="b"/> =
+        <input type="text" value="" id="c"/>
+        <input type="button" value="a+b=?" onclick="add();"/>
+        <input type="button" value="jquery a+b=?" class="calc_btn" "/>
+
+
+    <script type="text/javascript">
+        JQuery('.calc_btn').on('click',function(){
+            console.log('calc');
+
+        });
+
+        function add() {
+            console.log('add');
+            var a = document.getElementById('a').value;
+            var b = document.getElementById('b').value;
+            if (isNaN(a) || isNaN(b)) {
+//                如果不是数字直接打断
+                return;
+            }
+            document.getElementById('c').value = parseInt(a) + parseInt(b);
+        }
+
+
+        console.log(document.getElementById('mydivid'));
+        console.log(document.getElementsByClassName('mydivclass'));
+        console.log(document.getElementsByTagName('div'));
+       /*
+        var name = "zrd";
+//        alert (name);
+
+//        数字  js 不区分整型浮点型
+        var age = 23;
+        var height = 1.5;
+//       字符串
+        var str_name1 = 'tomcat';
+        var str_name2 = 'nginx';
+//      布尔类型
+        var isman = false; // true
+//      逻辑 运算 符   && || !
+        true && true;
+        false || true;
+        ! true;
+
+//        null
+        null ;
+
+//      字典  key必须是字符串    --> js 叫做 Object
+        var age = {"tomcat":1990, "apache":1991, "nginx": 2008, "docker": 2011};
+
+//        增加
+        age["nginx"] = 2009
+//        删除
+        delete age["nginx"];
+
+//      list 列表   叫数组
+        var list_test = ['False',true,0,['a','b','c'],{'name':'tomcat','age':23}]
+        console.log(list_test);
+//      添加元素
+
+
+
+//        调试打印
+        console.log(age);
+
+//        流程
+        var num = 1;
+        if(num > 5) {
+            console.log('>5');
+        }
+//        else
+        if(num > 5 ){
+            console.log('>5');
+        } else {
+            console.log('<5');
+        }
+//        else if
+
+
+        if(num > 5 ){
+            console.log('>5');
+        } else if(num > 3) {
+            console.log('> 3 <5');
+        } else {
+            console.log('<5');
+        }
+//        while
+        while (num < 10 ) {
+            console.log(num);
+            num += 1;
+        }
+//        for
+        for(a=0; a <=10 ; a++) {
+            console.log('===============');
+            console.log(a);
+        }
+//        遍历列表元素
+        for(a=0; a <list_test.length ; a++) {
+            console.log('--');
+            console.log(list_test[a]);
+        }
+//        字典遍历
+        var age = {"tomcat":1990, "apache":1991, "nginx": 2008, "docker": 2011};
+        for(var key in age) {
+            console.log(key);
+            console.log(age[key]);
+        }
+//
+//        函数
+        function print_hello(){
+            console.log('hello, world!');
+        }
+        print_hello();
+//        参数
+        function print_hello_var(name) {
+            console.log('hello,'+ name);
+        }
+         print_hello_var('tomcat');
+
+//        多个参数
+        function add(m,n) {
+            return m + n;
+        }
+        console.log(add(100,1));
+
+//        匿名函数  cmp  = lambda x ,y: x > y
+        var cmp = function(x, y) {
+            return x > y ;
+        }
+        console.log(cmp(5,2));
+*/
+//console.log(JQuery);
+
+
+    </script>
+
+
+
+
+
+
+</body>
+</html>

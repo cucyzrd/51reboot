@@ -13,7 +13,8 @@
 
     <link href="/static/sfv/css/animate.css" rel="stylesheet">
     <link href="/static/sfv/css/style.css" rel="stylesheet">
-
+    {% block link %} {% endblock %}
+    {% block style %} {% endblock%}
 </head>
 
 <body>
@@ -132,12 +133,14 @@
 
 <script src="/static/sfv/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
+{% block script %} {% endblock %}
 
 <script>
     $(document).ready(function(){
 
-
     });
+    {% block js %} {% endblock %}
+
 </script>
 
 

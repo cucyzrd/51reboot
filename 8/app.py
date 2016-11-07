@@ -5,10 +5,15 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from flask import redirect
-
+import json
 import models
 from flask import  session
 import os
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 #创建Flask对象
 app = Flask(__name__)
 app.secret_key= os.urandom(32)
@@ -54,6 +59,21 @@ def user_save():
         return redirect('/users/')
     else:
         return render_template('user_create.html', username=username, age=age, error=error)
+
+@app.route('/user/save/json/', methods=['POST'])
+def user_save_json():
+    username = request.form.get('username', '')
+    password = request.form.get('password', '')
+    # print request.form
+    age = request.form.get('age', 0)
+    ok, error = models.validate_user_save(username, password, age)
+    if ok:
+        models.user_save(username, password, age)
+        return json.dumps({'code': 200})
+
+    else:
+        return json.dumps({'code': 400, 'error': error})
+
 
 @app.route('/user/view/')
 def user_view():
