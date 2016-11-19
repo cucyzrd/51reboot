@@ -1,0 +1,496 @@
+{% extends "layout.html" %}
+
+{% block title %}CMDB | 用户管理{% endblock %}
+{% block nav_users1 %}class="active"{% endblock %}
+{% block nav_users_list1 %}class="active"{% endblock %}
+{% block breadcrumb %}
+
+
+
+
+<li>
+    <a href="javascript:void(0)">机房</a>
+</li>
+<li class="active">
+    <strong>资产管理</strong>
+</li>
+{% endblock %}
+{% block content %}
+
+ <a href="/user/create/" class="btn btn-primary" role="button">添加用户</a>
+<!-- Button trigger modal -->
+<!--  添加资产模块  -->
+<button type="button" class="btn btn-primary " data-toggle="modal" data-target="#resoure_create">
+  资产添加
+</button>
+
+
+<!-- Modal -->
+<div class="modal fade" id="user_create" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">用户信息</h4>
+      </div>
+      <div class="modal-body">
+          <form method="post" class="form-horizontal create_form" role="form" action="/user/save/" >
+
+
+                                <!-- 用户名代码块-->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">用户名</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="username" name="username" value="{{username}}">
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+
+                                <!-- 年龄代码块-->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">年龄</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" placeholder="age" name="age" value="{{age}}">
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+
+                                <!-- 密码代码块-->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Password</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" name="password" type="password" placeholder="请输入密码" name="password" value="{{password}}"/>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <!-- 密码代码块-->
+
+                                <!-- 邮箱代码块 -->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Email</label>
+                                    <div class="col-sm-10"><input class="form-control" name="email" type="email"></div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <!-- 邮箱代码块 -->
+
+                                <!--电话代码块-->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">电话</label>
+                                    <div class="col-sm-10"><input class="form-control" name="phone" type="text"></div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <!--电话代码块-->
+
+                                <!-- 部门代码块-->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">部门</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control m-b" name="department">
+                                            <option value="1">研发部</option>
+                                            <option value="2">产品部</option>
+                                            <option value="3" selected="selected">运维部</option>
+                                            <option value="4">其他</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+
+                                <!-- 性别代码块 -->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">性别:</label>
+                                    <div class="col-sm-10">
+                                            <input type="radio" name="sex" value="1" checked="checked" />男
+                                            <input type="radio" name="sex" value="0" />女
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <!--性别代码块 -->
+
+                                <!-- 爱好代码块 -->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">爱好</label>
+                                    <div class="col-sm-10">
+                                        <input type="checkbox" name="hobby" value="football"/>足球
+                                        <input type="checkbox" name="hobby" value="basketball" checked="checked"/>篮球
+                                        <input type="checkbox" name="hobby" value="pingpong" checked="checked" />乒乓球
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+
+                                <!-- 爱好代码块 -->
+
+                                <!-- 个人简介  -->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">简介</label>
+                                    <div class="col-sm-10">
+                                          <textarea name="detail">XXXXX</textarea>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <!-- 个人简介  -->
+
+                                <!-- 头像 -->
+                            <div class="form-group">
+                                    <label class="col-sm-2 control-label">头像:</label>
+                                    <div class="col-sm-10">
+                                        <input type="file" class="form-control" name="icon"/>
+                                    </div>
+                            </div>
+                                <div class="hr-line-dashed"></div>
+                                <!-- 头像 -->
+
+                                <!-- 主页-->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">主页:</label>
+                                    <div class="col-sm-10">
+                                        <input type="url" class="form-control" name="homepage" value="{{homepage}}" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <!-- 主页-->
+
+                                <!-- 出生日期  -->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">出生日期:</label>
+                                    <div class="col-sm-10">
+                                        <input type="date" class="form-control" name="birthday" value="{{birthday}}" />
+                                    </div>
+                                </div>
+                                <!--<div class="hr-line-dashed"></div>-->
+                                <!-- 出生日期  -->
+
+                                <!-- 错误信息回显 -->
+                                {% if error %}
+                                 <div class="form-group alert alert-danger" role="alert">
+                                     {{error}}
+                                 </div>
+                                {% endif %}
+                            </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="create_btn btn btn-primary">添加</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- modal2 -->
+<div class="modal fade" id="resoure_create" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">资产编辑</h4>
+      </div>
+      <div class="modal-body">
+          <form method="post" class="form-horizontal create_form" role="form" action="/user/save/" >
+
+                                <input type="hidden" name="id" value=""/>
+                                <!-- 用户名代码块-->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">SN</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="SN" name="sn" value="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">主机名</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="hostname" name="hosname" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">os</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="os" name="os" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">ip</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="ip" name="ip" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">机房ID</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="machine_room_id" name="machine_room_id" value="{{hostname}}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">生产厂商</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="vendor" name="vendor" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">型号</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="model" name="model" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">内存</label>
+                                    <div class="col-sm-10">
+                                        <!--<input class="form-control" type="text"  placeholder="ram" name="ram" value="">-->
+ <input class="form-control" type="text"  id="ex2" data-slider-id='ex1Slider' data-slider-min="1" data-slider-max="2560" data-slider-step="1" data-slider-value="14" placeholder="ram" name="ram" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">cpu</label>
+                                    <div class="col-sm-10">
+                                        <!--<input class="form-control" type="text"  placeholder="cpu" name="cpu" value="">-->
+                                         <input class="form-control" type="text"  id="ex1" data-slider-id='ex1Slider' data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" placeholder="cpu" name="cpu" value="">
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">disk</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="disk" name="disk" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">上架时间</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="date"  placeholder="time_on_shelves" name="time_on_shelves" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">过保时间</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="date"  placeholder="over_guaranteed_date" name="over_guaranteed_date" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">业务</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="buiness" name="buiness" value="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">admin</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="admin" name="admin" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">状态</label>
+                                    <!--<div class="col-sm-10">-->
+                                        <!--<input class="form-control" type="text"  placeholder="status" name="status" value="">-->
+                                    <!--</div>-->
+                                    <div class="col-sm-10">
+                                        <select class="form-control" name="status">
+                                            <option value="1">维修</option>
+                                            <option value="0">上线</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <!-- 错误信息回显 -->
+                                {% if error %}
+                                 <div class="form-group alert alert-danger" role="alert">
+                                     {{error}}
+                                 </div>
+                                {% endif %}
+
+
+                            </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="asset_update_create_btn create_btn btn btn-primary">保存修改</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- moda2 end -->
+
+        <table class="table assets table-striped table-bordered table-hover dataTables-example">
+            <thead>
+        <tr>
+            <th>SN</th>
+            <th>主机名/IP</th>
+            <th>OS</th>
+            <th>资源</th>
+            <th>业务</th>
+            <th>shiyongzhe</th>
+            <th>机房</th>
+            <th>上架/过保时间</th>
+            <th>厂商/型号</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+
+{% endblock %}
+
+{% block link %}
+
+    <link href="/static/sfv/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="/static/sfv/css/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
+    <link href="/static/sfv/css/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet">
+
+    <link href="/static/sfv/css/animate.css" rel="stylesheet">
+    <link href="/static/sfv/css/style.css" rel="stylesheet">
+    <link href="/static/silder/css/bootstrap-slider.css" rel="stylesheet">
+
+{% endblock %}
+{% block style %} {% endblock%}
+
+{% block script %}
+
+    <!-- Data Tables -->
+<script src="/static/sfv/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="/static/sfv/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="/static/sfv/js/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="/static/sfv/js/plugins/dataTables/dataTables.tableTools.min.js"></script>
+<script type='text/javascript' src="/static/silder/js/bootstrap-slider.js"></script>
+{% endblock %}
+
+{% block js %}
+
+
+       $(document).ready(function() {
+   var table = jQuery('.assets').dataTable({
+                responsive: true,
+                "dom": 'T<"clear">lfrtip',
+                "tableTools": {
+                    "sSwfPath": "/static/sfv/js/plugins/dataTables/swf/copy_csv_xls_pdf.swf"
+                },
+                "ajax" : '/asset/list/',
+                              "columns" : [
+                    {"data" : "sn"},
+                    {
+                        "data" : function(row) {
+                            var elements = [];
+                            elements.push(row['hostname']);
+                            elements.push(row['ip']);
+                            return elements.join('/');
+                        }
+                    },
+                    {"data" : "os"},
+                    {
+                        "data" : function(row) {
+                            var elements = [];
+                            elements.push(row['cpu'] + '核');
+                            elements.push(row['ram'] + 'G');
+                            elements.push(row['disk'] + 'G');
+                            return elements.join('/');
+                        }
+                    },
+                    {"data" : "admin"},
+                    {"data" : "buiness"},
+                    {"data" : "machine_room_id"},
+                    {
+                        "data" : function(row) {
+                            var elements = [];
+                            elements.push(row['time_on_shelves']);
+                            elements.push(row['over_guaranteed_date']);
+                            return elements.join('/');
+                        }
+                    },
+                    {
+                        "data" : function(row) {
+                            var elements = [];
+                            elements.push(row['vendor']);
+                            elements.push(row['model']);
+                            return elements.join('/');
+                        }
+                    },
+                    {
+                        "data" : function(row) {
+                            return row['status'] == 1 ? '维护' : '使用';
+                        }
+                    },
+                    {
+                        "data" : function(row) {
+                            var elements = [];
+                            elements.push('<a class="btn-edit"  data-id="' + row['id'] +'" href="javascript:void(0)"><i class="fa fa-edit"></i></a>');
+                            elements.push('<a class="btn-delete"  data-id="' + row['id'] +'"  href="javascript:void(0)"><i class="fa fa-trash"></i></a>');
+                            return elements.join(' ');
+                        }
+                    }
+                ]
+            });
+
+      jQuery(document).on('click','.btn-delete',function(){
+        alert( '删除'+jQuery(this).data('id'));
+        });
+
+      jQuery(document).on('click','.btn-edit',function(){
+       // alert('编辑:' + jQuery(this).data('id'));
+        jQuery.get('/asset/view/',
+                {'id' : jQuery(this).data('id')},
+                function(response){
+
+                 for(var key in response) {
+                    jQuery('[name='+ key + ']').val(response[key]);
+                     }
+                    jQuery("#resoure_create").modal('show');
+                   // console.log(response);
+            },
+            'json');
+        // jQuery("#resoure_create").modal('show');
+        });
+
+
+
+
+         //   jQuery(document).on('click','.create_btn',function(){
+
+            jQuery.post('/user/save/json/',
+                jQuery('.create_form').serializeArray(),
+
+            function (data) {
+               if(data['code'] === 200 ){
+                    window.location.reload();
+                } else if (data['code'] === 400){
+                    alert(data['error']);
+                    }
+                },'json');
+            });
+
+        jQuery(document).on('click','.btn_delete1', function() {
+            //发起请求
+        var url = '/user/delete/?id=' + jQuery(this).data('id');
+        if(confirm('确定删除吗?')) {
+            window.location.replace(url);
+        }
+    });
+    jQuery('.asset_update_create_btn').on('click', function() {
+        var params = jQuery('.form-edit').serializeArray();
+        jQuery.post('/asset/update/', params, function(response) {
+            console.log(response);
+
+        },
+        'json');
+    });
+
+
+//});
+
+var slider = new Slider('#ex1', {
+	formatter: function(value) {
+		return 'Current value: ' + value;
+	}
+});
+
+
+{% endblock %}
+
+
+
+

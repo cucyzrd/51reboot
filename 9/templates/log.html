@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- 我是一个注释 -->
+        <!-- 给浏览器说明编码方式、title等信息-->
+        <meta charset="utf-8" />
+        <title>LOG Top N</title>
+    </head>
+    <body>
+        <a href="/log/?topn=10">TOP 10</a>
+        <a href="/log/?topn=20">TOP 20</a>
+        <a href="/log/?topn=50">TOP 50</a>
+        <a href="/log/?topn=100">TOP 100</a>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>IP</th>
+                    <th>URL</th>
+                    <th>状态码</th>
+                    <th>次数</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                    <tr>
+                        <td>{{log[0][0]}}</td>
+                        <td>{{log[0][1]}}</td>
+                        <td>{{log[0][2]}}</td>
+                        <td>{{log[1]}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
