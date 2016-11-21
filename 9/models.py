@@ -1,7 +1,7 @@
 #encoding: utf-8
 
 import MySQLdb
-
+import datetime
 import gconf
 
 SQL_VALIDATE_LOGIN_COLUMNS = ('id', 'name')
@@ -20,11 +20,6 @@ SQL_USER_MODIFY = 'update user set name=%s, age=%s where id=%s'
 SQL_VALIDATE_USER_MODIFY = 'select id from user where id != %s and name = %s'
 
 SQL_USER_DELETE = 'DELETE FROM `zrd`.`user` WHERE  `id`=%s'
-
-
-SQL_ASSET_LIST_COLUMNS = 'id,sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status'.split(',')
-SQL_ASSET_LIST = 'select id,sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status from asset where status!=2;'
-
 
 # 数据库连接
 
@@ -266,34 +261,43 @@ def delete_machine(id):
 
 
 
+# ----------------------------------------------
+'''
+获取资产列表
+'''
 def get_assets():
-    SQL_ASSET_LIST_COLUMNS = 'id,sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status'.split(',')
-    rt_cnt, rt_list = execu_sql(SQL_ASSET_LIST, (), True)
+    SQL_ASSET_LIST_SQL_COLUMNS = 'id,sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status'.split(',')
+    SQL_ASSET_LIST_SQL = 'SELECT id,sn,hostname,os,ip, machine_room_id, vendor, model, ram, cpu, disk, time_on_shelves, over_guaranteed_date, buiness, admin, status FROM asset WHERE status != 2'
+    rt_cnt,rt_list = execu_sql(SQL_ASSET_LIST_SQL,(),True)
     assets = []
-    print rt_list
     for rt in rt_list:
-        asset = dict(zip(SQL_ASSET_LIST_COLUMNS, rt))
+        # 取出数据转换成字典格式
+        asset = dict(zip(SQL_ASSET_LIST_SQL_COLUMNS,rt))
+        # 使用datetime将时间转换为字符串, json无法解析非str类型
         for key in 'time_on_shelves,over_guaranteed_date'.split(','):
             if asset[key]:
                 asset[key] = asset[key].strftime('%Y-%m-%d')
         assets.append(asset)
     return assets
+'''
+获取资产ID
+'''
+def get_asset_by_id(aid):
+    GET_ASSET_BY_ID_COLUMNS = 'id,sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status'.split(',')
+    GET_ASSET_BY_ID = 'SELECT id,sn,hostname,os,ip, machine_room_id, vendor, model, ram, cpu, disk, time_on_shelves, over_guaranteed_date, buiness, admin, status FROM asset WHERE status != 2 AND id=%s'
 
-
-def get_assets_by_id(aid):
-    SQL_ASSET_GET_LIST_BY_ID = 'select id,sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status from asset where status!=2 and id=%s;'
-    rt_cnt, rt_list = execu_sql(SQL_ASSET_GET_LIST_BY_ID, (aid,), True)
+    rt_cnt,rt_list = execu_sql(GET_ASSET_BY_ID,(aid,),True)
     assets = []
-    print rt_list
     for rt in rt_list:
-        asset = dict(zip(SQL_ASSET_LIST_COLUMNS, rt))
+        # 取出数据转换成字典格式
+        asset = dict(zip(GET_ASSET_BY_ID_COLUMNS,rt))
+        # 使用datetime将时间转换为字符串, json无法解析非str类型
         for key in 'time_on_shelves,over_guaranteed_date'.split(','):
             if asset[key]:
                 asset[key] = asset[key].strftime('%Y-%m-%d')
         assets.append(asset)
+    # 防止数据为空,使用三元操作符
     return assets[0] if assets else {}
-
-
 # ---------------------------------------------
 '''
 日志信息
@@ -312,14 +316,5 @@ def get_topn(src, topn=10):
     result = sorted(stat_dict.items(), key=lambda x:x[1])
     return result[:-topn - 1:-1]
 
-
-
-
 if __name__ == "__main__":
-    pass
-    # 批量插入数据
-    for i in range(101):
-        sql = "INSERT INTO `zrd`.`user`(`name`, `age`, `password`)  VALUES ('zhou%s',%s, md5('%s'))"
-
-        args = (i,i,i)
-        execu_sql(sql,args,False)
+    get_assets()

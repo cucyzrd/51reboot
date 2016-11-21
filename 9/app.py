@@ -16,7 +16,7 @@ sys.setdefaultencoding('utf-8')
 
 #创建Flask对象
 app = Flask(__name__)
-app.secret_key= 'nmmmmmmmmmmmmmmmmmmmm'
+app.secret_key= 'ddddddddddddddddddddfgddddddddddddddddddddddddddddddddd'
 
 #/ ==> index........
 @app.route('/')
@@ -38,8 +38,7 @@ def login():
 
 @app.route('/users/')
 def user_list():
-    if session.get('user') is None:
-        return redirect('/')   # 如果用户session为空直接跳转到首页
+    if session.get('user') is None: return redirect('/')   # 如果用户session为空直接跳转到首页
     users = models.get_users()
     return render_template('user.html', users=users)
 
@@ -197,27 +196,38 @@ def delete_machine():
     models.delete_machine(id)
     return redirect('/machines/')
 
-# -----------------------------------------------
-'''
-资产列表
-'''
+# ------------------------
+#  资产管理
+# ------------------------
 @app.route('/assets/')
-def asset_index():
-    if session.get('user') is None: return redirect('/')
-    return render_template('asset.html')
+def assets_index():
+    if session.get('user') is None: return redirect('/')   # 如果用户session为空直接跳转到首页
+    return render_template('assets.html')
 
-@app.route('/asset/list/')
-def asset_list():
-    assets = models.get_assets()
-    return json.dumps({'data' : assets})
+'''
+获取资产列表
+以ajax方式获取
+'''
+@app.route('/assets/list/')
+def assets_list():
+    assets= models.get_assets()
+    return json.dumps( {'data': assets } )
+
+'''
+获取资产ID
+'''
 @app.route('/asset/view/')
 def asset_view():
     aid = request.args.get('id',0)
-    asset = models.get_assets_by_id(aid)
+    # print aid
+    asset = models.get_asset_by_id(aid)
     return json.dumps(asset)
-@app.route('/asset/update/', methods=['POST'] )
+'''
+保存编辑 接收ajax发过来的信息
+'''
+@app.route('/asset/update/',methods=['POST'])
 def asset_update():
-    return json.dumps({'error': ''})
+    return json.dumps({'error' :''})
 
 
 # ----------------------------
