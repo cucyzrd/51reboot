@@ -288,7 +288,7 @@ def asset_update():
 def delete_asset():
     aid = request.args.get('id')
     models.delete_asset(aid)
-    return redirect('/assets/')
+    return json.dumps({'code' : 200})
 # ----------------------------
 #  日志
 # ----------------------------
