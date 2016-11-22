@@ -213,6 +213,9 @@ def assets_list():
     assets= models.get_assets()
     return json.dumps( {'data': assets } )
 
+
+
+
 '''
 获取资产ID
 '''
@@ -222,6 +225,35 @@ def asset_view():
     # print aid
     asset = models.get_asset_by_id(aid)
     return json.dumps(asset)
+'''
+新增资产 json格式上传
+'''
+@app.route('/asset/save/json/', methods=['POST'])
+def asset_save_json():
+    a = request.form
+    sn =  a.get('sn',0)
+    hostname =  a.get('hostname',0)
+    ip =  a.get('ip',0)
+    os =  a.get('os',0)
+    ram =  a.get('ram',0)
+    cpu =  a.get('cpu',0)
+    disk = a.get('disk',0)
+    buiness =  a.get('buiness',0)
+    machine_room_id =  a.get('machine_room_id',0)
+    time_on_shelves =  a.get('time_on_shelves',0)
+    over_guaranteed_date =  a.get('over_guaranteed_date',0)
+    vendor =  a.get('vendor',0)
+    model =  a.get('model',0)
+    status =  a.get('status',0)
+    # print sn, hostname, os, ip, machine_room_id, vendor, model, ram, cpu, disk, time_on_shelves, over_guaranteed_date, buiness, status,'\n'
+    #  只检查SN号是否有重复 其他不做检查
+    ok, error = models.validate_asset_save(sn)
+    if ok:
+        models.asset_save(sn, hostname, os, ip, machine_room_id, vendor, model, ram, cpu, disk, time_on_shelves, over_guaranteed_date, buiness, status)
+        return json.dumps({'code': 200})
+    return json.dumps({'code': 400, 'error': error})
+
+
 '''
 保存编辑 接收ajax发过来的信息
 '''

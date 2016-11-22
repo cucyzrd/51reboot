@@ -32,15 +32,104 @@
         <h4 class="modal-title" id="myModalLabel">资产创建</h4>
       </div>
       <div class="modal-body">
-          <form method="post" class="form-horizontal create_form" role="form" action="/machine/save/" >
+          <form method="post" class="form-horizontal create-form" role="form" action="/asset/save/" >
+                            <input type="hidden" name="id" value=""/>
                                 <!-- 机房名代码块 -->
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">机房名</label>
+                                    <label class="col-sm-2 control-label">SN:</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" type="text"  placeholder="room_name" name="room_name" value="{{ room_name }}">
+                                        <input class="form-control" type="text"  placeholder="sn" name="sn" value="">
                                     </div>
                                 </div>
-                                <div class="hr-line-dashed"></div>
+                               <div class="form-group">
+                                    <label class="col-sm-2 control-label">主机名:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="hostname" name="hostname" value="">
+                                    </div>
+                               </div>
+                               <div class="form-group">
+                                    <label class="col-sm-2 control-label">IP:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="ip" name="ip" value="">
+                                    </div>
+                               </div>
+                               <div class="form-group">
+                                    <label class="col-sm-2 control-label">系统:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="os" name="os" value="">
+                                    </div>
+                               </div>
+                               <div class="form-group">
+                                    <label class="col-sm-2 control-label">cpu:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" data-slider-min="1" data-slider-max="64" data-slider-step="2" data-slider-value="2" placeholder="cpu" name="cpu" value="">
+                                    </div>
+                               </div>
+                               <div class="form-group">
+                                    <label class="col-sm-2 control-label">内存:</label>
+                                    <div class="col-sm-10">
+                                         <input class="form-control" type="text" data-slider-min="1" data-slider-max="256" data-slider-step="2" data-slider-value="2" placeholder="ram" name="ram" value="">
+                                    </div>
+                                </div>
+                               <div class="form-group">
+                                    <label class="col-sm-2 control-label">硬盘:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" data-slider-min="50" data-slider-max="500" data-slider-step="2" data-slider-value="2" placeholder="disk" name="disk" value="">
+
+                                    </div>
+                               </div>
+
+                               <div class="form-group">
+                                    <label class="col-sm-2 control-label">业务:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="buiness" name="buiness" value="">
+                                    </div>
+                               </div>
+                              <div class="form-group">
+                                    <label class="col-sm-2 control-label">机房:</label>
+                                    <div class="col-sm-10">
+                                       <select name="machine_room_id" class="form-control">
+                                           <option value="1">亦庄机房</option>
+                                           <option value="2">海淀机房</option>
+                                       </select>
+                                    </div>
+                              </div>
+                              <div class="form-group">
+                                    <label class="col-sm-2 control-label">上架时间:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="date"  placeholder="time_on_shelves" name="time_on_shelves" value="">
+                                    </div>
+                              </div>
+                              <div class="form-group">
+                                    <label class="col-sm-2 control-label">过保时间:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="date"  placeholder="over_guaranteed_date" name="over_guaranteed_date" value="">
+                                    </div>
+                              </div>
+                              <div class="form-group">
+                                    <label class="col-sm-2 control-label">厂商:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="vendor" name="vendor" value="">
+                                    </div>
+                              </div>
+                              <div class="form-group">
+                                    <label class="col-sm-2 control-label">型号:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="model" name="model" value="">
+                                    </div>
+                              </div>
+                              <div class="form-group">
+                                    <label class="col-sm-2 control-label">状态:</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control"  name="status" >
+                                            <option value="0">使用</option>
+                                            <option value="1">维护</option>
+                                        </select>
+                                    </div>
+                              </div>
+
+
+
                                 <!-- 错误信息回显 -->
                                 {% if error %}
                                  <div class="form-group alert alert-danger" role="alert">
@@ -291,8 +380,8 @@ http://www.htmleaf.com/Demo/201502041325.html
             });
 
     jQuery(document).on('click','.create_btn',function(){
-    jQuery.post('/machine/save/json/',
-        jQuery('.create_form').serializeArray(),
+    jQuery.post('/asset/save/json/',
+        jQuery('.create-form').serializeArray(),
     function (data) {
        if(data['code'] === 200 ){
             window.location.reload();
@@ -344,7 +433,7 @@ http://www.htmleaf.com/Demo/201502041325.html
         if(confirm('确定删除吗?')) {
             window.location.replace(url);
         }
-    });
+    });    // 删除资产信息
 
 
 

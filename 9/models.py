@@ -298,6 +298,37 @@ def get_asset_by_id(aid):
         assets.append(asset)
     # 防止数据为空,使用三元操作符
     return assets[0] if assets else {}
+
+'''
+新增资产前 检查合法性
+'''
+def validate_asset_save(sn):
+    if sn.strip() == '':
+        return False, 'sn is empty'
+
+    #  只检查SN号是否有重复 其他不做检查
+    SQL_VALIDATE_ASSET_SAVE = 'SELECT  `sn` FROM asset WHERE sn=%s'
+    sql = SQL_VALIDATE_ASSET_SAVE
+    args = (sn,)
+    rt_cnt,rt_list = execu_sql(sql,args,True)
+    if rt_cnt:
+        return False,'sn is same'
+    return True, ''
+'''
+新增资产
+'''
+def asset_save(sn, hostname, os, ip, machine_room_id, vendor, model, ram, cpu, disk, time_on_shelves, over_guaranteed_date, buiness,  status):
+    SQL_ASSET_SAVE = 'INSERT INTO asset (sn, hostname, os, ip, machine_room_id, vendor, model, ram, cpu, disk, time_on_shelves, over_guaranteed_date, buiness,  status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+    sql = SQL_ASSET_SAVE
+    args = (sn, hostname, os, ip, machine_room_id, vendor, model, ram, cpu, disk, time_on_shelves, over_guaranteed_date, buiness, status)
+    rt_cnt,rt_list = execu_sql(sql,args,False)
+
+    # 保存信息影响一行，否则都是不通过
+    if rt_cnt == 1:
+        return True,''
+    return False,'保存信息失败'
+
+
 '''
 更新资产前，检查合法性
 '''
