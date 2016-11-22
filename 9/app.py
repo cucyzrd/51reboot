@@ -249,8 +249,14 @@ def asset_update():
         models.assets_update(sn, hostname, os, ip, machine_room_id,vendor, model, ram, cpu, disk, time_on_shelves,over_guaranteed_date, buiness,status,aid)
         return json.dumps({'error': ''})
     return json.dumps({'code':400,'error' :_error})
-
-
+'''
+删除资产信息
+'''
+@app.route('/asset/delete/')
+def delete_asset():
+    aid = request.args.get('id')
+    models.delete_asset(aid)
+    return redirect('/assets/')
 # ----------------------------
 #  日志
 # ----------------------------

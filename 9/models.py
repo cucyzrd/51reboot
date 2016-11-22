@@ -323,6 +323,18 @@ def assets_update(sn, hostname, os, ip, machine_room_id,vendor, model, ram, cpu,
     return True if rt_cnt else False
 
 
+"""
+删除资产信息
+"""
+def delete_asset(aid):
+    SQL_ASSET_DELETE = 'DELETE FROM asset WHERE  `id`=%s'
+    sql = SQL_ASSET_DELETE
+    args = (aid,)
+    rt_cnt , rt_list = execu_sql(sql,args,False)
+    return True
+
+
+
 # ---------------------------------------------
 '''
 日志信息

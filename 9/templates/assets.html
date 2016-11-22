@@ -340,7 +340,7 @@ http://www.htmleaf.com/Demo/201502041325.html
 
     jQuery(document).on('click','.btn_delete', function() {
             //发起请求
-        var url = '/machine/delete/?id=' + jQuery(this).data('id');
+        var url = '/asset/delete/?id=' + jQuery(this).data('id');
         if(confirm('确定删除吗?')) {
             window.location.replace(url);
         }
