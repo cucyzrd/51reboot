@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block title %}CMDB | 机房管理{% endblock %}
+{% block nav_users %}class="active"{% endblock %}
+{% block nav_users_list %}class="active"{% endblock %}
+{% block breadcrumb %}
+<li>
+    <a href="javascript:void(0)">机房</a>
+</li>
+<li class="active">
+    <strong>添加机房</strong>
+</li>
+{% endblock %}
+{% block content %}
+    <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>添加机房信息</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="#">Config option 1</a>
+                                    </li>
+                                    <li><a href="#">Config option 2</a>
+                                    </li>
+                                </ul>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <form method="post" class="form-horizontal" role="form" action="/machine/save/" >
+
+                            <!-- room_name,addr,ip_ranges  -->
+                                <!-- 机房名代码块-->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">机房名</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text"  placeholder="请输入机房名称" name="room_name" value="{{ room_name }}">
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+
+                                <!-- 机房地址代码块-->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">地址</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="text" placeholder="请输入地址" name="addr" value="{{ addr }}">
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+
+                                <!-- ip_ranges代码块-->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">ip段</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" name="ip_ranges" type="text" placeholder="请输入ip_ranges" name="ip_ranges" value="{{ip_ranges}}"/>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <!-- ip_ranges代码块-->
+
+                                <!-- 错误信息回显 -->
+                                {% if error %}
+                                 <div class="form-group alert alert-danger" role="alert">
+                                     {{error}}
+                                 </div>
+                                {% endif %}
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2">
+                                        <button class="btn btn-white" type="submit">取消</button>
+                                        <button class="btn btn-primary" type="submit">提交</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+{% endblock %}
+
+
+
+

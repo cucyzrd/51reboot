@@ -1,12 +1,8 @@
 #encoding: utf-8
 
-import datetime
-import json
-
 import MySQLdb
-
+import datetime
 import gconf
-import dbutils
 
 SQL_VALIDATE_LOGIN_COLUMNS = ('id', 'name')
 
@@ -23,38 +19,53 @@ SQL_USER_MODIFY = 'update user set name=%s, age=%s where id=%s'
 
 SQL_VALIDATE_USER_MODIFY = 'select id from user where id != %s and name = %s'
 
-SQL_USER_DELETE = 'delete from user where id = %s'
+SQL_USER_DELETE = 'DELETE FROM `zrd`.`user` WHERE  `id`=%s'
 
+# 数据库连接
 
-SQL_MACHINE_ROOM_COLUMNS = ('id', 'name', 'addr', 'ip_ranges')
-SQL_MACHINE_ROOM_LIST = 'select id, name, addr, ip_ranges from machine_room'
+def execu_sql(sql, args, is_fetch):
+    rt_cnt = 0
+    rt_list = []
+    conn = MySQLdb.connect(host=gconf.MYSQL_HOST, \
+                        port=gconf.MYSQL_PORT, \
+                        user=gconf.MYSQL_USER, \
+                        passwd=gconf.MYSQL_PASSWD, \
+                        db=gconf.MYSQL_DB, \
+                        charset=gconf.MYSQL_CHARSET)
+    cursor = conn.cursor()
+    rt_cnt = cursor.execute(sql, args)
+    if is_fetch:
+        rt_list = cursor.fetchall()
+    else:
+        conn.commit()
+    cursor.close()
+    conn.close()
+    return rt_cnt, rt_list
 
-SQL_MACHINE_ROOM_SAVE = 'insert into machine_room(name, addr, ip_ranges) values(%s, %s, %s)'
-SQL_MACHINE_ROOM_DELETE = 'delete from machine_room where id=%s'
-
-SQL_ASSET_LIST_COLUMNS = 'id,sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status'.split(',')
-SQL_ASSET_LIST = 'select id,sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status from asset where status!=2;'
-
-SQL_ASSET_SAVE_COLUMNS = 'sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status'.split(',')
-SQL_ASSET_SAVE = 'insert into asset({columns}) values({values})'.format(columns=','.join(SQL_ASSET_SAVE_COLUMNS), values=','.join(['%s'] * len(SQL_ASSET_SAVE_COLUMNS)))
-
-SQL_ASSET_BY_ID = 'select id,sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status from asset where status!=2 and id=%s;'
-
-SQL_ASSET_MODIFY_COLUMNS = 'sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status'.split(',')
-SQL_ASSET_MODIFY = 'update asset set {values} where id=%s and status!=2'.format(values=','.join(['{column}=%s'.format(column=column) for column in SQL_ASSET_MODIFY_COLUMNS]))
-
-SQL_ASSET_DELETE = 'update asset set status=2 where id=%s'
-SQL_MONITOR_HOST_LIST = 'select m_time,cpu,mem,disk from monitor_host where ip=%s and r_time >=%s order by m_time asc'
+'''
+获取用户信息列表
+'''
 def get_users():
-    _, rt_list = dbutils.execute_sql(SQL_USER_LIST, (), True)
+    sql = SQL_USER_LIST
+    args = ()
+
+    rt_cnt, rt_list = execu_sql(sql,args,True)
+
     return [dict(zip(SQL_USER_LIST_COLUMNS, line)) for line in rt_list]
 
-
+'''
+用户登录检查
+'''
 def validate_login(username, password):
-    _, rt_list = dbutils.execute_sql(SQL_VALIDATE_LOGIN, (username, password), True)
-    return  dict(zip(SQL_VALIDATE_LOGIN_COLUMNS, rt_list[0])) if rt_list else None
+    sql = SQL_VALIDATE_LOGIN
+    args = (username, password)
+    rt_cnt,rt_list = execu_sql(sql,args,True)
 
+    return None if rt_list is None else dict(zip(SQL_VALIDATE_LOGIN_COLUMNS, rt_list))
 
+'''
+新增用户前 检查
+'''
 def validate_user_save(username, password, age):
     if username.strip() == '':
         return False, 'username is empty'
@@ -70,17 +81,31 @@ def validate_user_save(username, password, age):
 
     return True, ''
 
-
+'''
+保存新增用户信息
+返回 True/False
+'''
 def user_save(username, password, age):
-    rt_cnt, _ = dbutils.execute_sql(SQL_USER_SAVE, (username.strip(), age.strip(), password.strip()), False)
+    sql = SQL_USER_SAVE
+    args = (username, age, password)
+    rt_cnt ,rt_list = execu_sql(sql,args,False)
+
     return rt_cnt != 0
 
-
+'''
+以ID获取用户信息
+返回 : {'age': xx, 'id': xx, 'name': xx}
+'''
 def get_user_by_id(uid):
-    _, rt_list = dbutils.execute_sql(SQL_USER_BY_ID, (uid, ), True)
-    return dict(zip(SQL_USER_BY_ID_COLUMNS, rt_list[0])) if rt_list else None
+    sql = SQL_USER_BY_ID
+    args = (uid,)
+    rt_cnt, rt_list = execu_sql(sql,args,True)
+    return {} if rt_list is None else dict(zip(SQL_USER_BY_ID_COLUMNS, (rt_list[0][0],rt_list[0][1],rt_list[0][2])))
 
-
+'''
+用户修改信息，合法性检查
+返回值 True/False
+'''
 def validate_user_modify(uid, username, age):
     if not get_user_by_id(uid):
         return False, 'user is not found'
@@ -91,46 +116,260 @@ def validate_user_modify(uid, username, age):
     if not str(age).isdigit() or int(age) < 1 or int(age) > 100:
         return False, 'age is not a between 1 and 100 integer'
 
-    rt_cnt, _ = dbutils.execute_sql(SQL_VALIDATE_USER_MODIFY, (uid, username.strip()), True)
+    sql = SQL_VALIDATE_USER_MODIFY
+    args = (uid, username.strip())
+    rt_cnt , rt_list = execu_sql(sql,args,False)
+    # 已用用户存在返回的值 必然不是0
     if rt_cnt != 0:
         return False, 'username is same to other'
-
     return True, ''
 
-
+'''
+保存用户修改信息
+'''
 def user_modify(uid, username, age):
-    dbutils.execute_sql(SQL_USER_MODIFY, (username.strip(), age.strip(), uid), False)
+    sql = SQL_USER_MODIFY
+    args = (username, age, uid)
+    rt_cnt , rt_list = execu_sql(sql,args,False)
+    return True
+
+"""
+删除用户信息
+"""
+def delete_user(uid):
+    sql = SQL_USER_DELETE
+    args = (uid,)
+    rt_cnt , rt_list = execu_sql(sql,args,False)
     return True
 
 
-def user_delete(uid):
-    dbutils.execute_sql(SQL_USER_DELETE, (uid,), False)
-    return True
+# -----------------------------------------------------------------------
+'''
+获取机房列表
+'''
+def get_machines():
+    SQL_MACHINES_LIST = 'SELECT  `id`,  `room_name`,  `addr`,  LEFT(`ip_ranges`, 256) FROM `zrd`.`machine_room` LIMIT 1000'
+    SQL_MACHINES_LIST_COLUMS = ('id', 'room_name', 'addr','ip_ranges')
+    sql = SQL_MACHINES_LIST
+    args = ()
 
-def get_machine_rooms():
-    rt_cnt, rt_list = dbutils.execute_sql(SQL_MACHINE_ROOM_LIST, (), True)
-    return [dict(zip(SQL_MACHINE_ROOM_COLUMNS, rt)) for rt in rt_list]
+    rt_cnt, rt_list=execu_sql(sql,args,True)
+    a = [dict(zip(SQL_MACHINES_LIST_COLUMS,line)) for line in rt_list]
+    # print a
+    return a
 
-def get_machine_rooms_index_by_id():
-    rt_list = get_machine_rooms()
-    rt_dict = {}
-    for room in rt_list:
-        rt_dict[room['id']] = room
-    return rt_dict
+'''
+机房保存前检查
+'''
+def validate_machine_save(room_name,addr,ip_ranges):
+    if room_name.strip() == '':
+        return False, 'room_name is empty'
+    if len(room_name.strip()) > 64:
+        return False, 'room_name len is not gt 64'
 
-def validate_machine_room_save(name, addr, ip_ranges):
-    if name.strip() == '' or addr.strip() == '' or ip_ranges.strip() == '':
-        return False, 'name, addr, ip_ranges is empty'
+    if addr.strip() == '':
+        return False, 'addr is empty'
+    if len(addr.strip()) > 128:
+        return False, 'addr len is not gt 128'
+
+    if ip_ranges.strip() == '':
+        return False, 'ip_ranges is empty'
+
+    SQL_VALIDATE_MACHINE_SAVE = 'SELECT  `room_name` FROM `zrd`.`machine_room` WHERE room_name=%s'
+    sql = SQL_VALIDATE_MACHINE_SAVE
+    args = (room_name,)
+    rt_cnt,rt_list = execu_sql(sql,args,True)
+    if rt_cnt:
+        return False,'room_name is same'
+
     return True, ''
 
-def machine_room_save(name, addr, ip_ranges):
-    dbutils.execute_sql(SQL_MACHINE_ROOM_SAVE, (name.strip(), addr,strip(), ip_ranges.strip()), False)
+'''
+保存机房信息
+'''
+def machine_save(room_name,addr,ip_ranges):
+    SQL_USER_SAVE = 'INSERT INTO `zrd`.`machine_room` (`room_name`, `addr`, `ip_ranges`) VALUES (%s, %s, %s)'
+    sql = SQL_USER_SAVE
+    args = (room_name,addr,ip_ranges)
+    rt_cnt,rt_list = execu_sql(sql,args,False)
+
+    # 保存信息影响一行，否则都是不通过
+    if rt_cnt == 1:
+        return True,''
+    return False,'保存信息失败'
+
+'''
+以ID获取机房信息
+返回 : {'age': xx, 'id': xx, 'name': xx}
+'''
+def get_machine_by_id(id):
+    SQL_MACHINE_BY_ID = 'SELECT `id`, `room_name`, `addr`, `ip_ranges` FROM `zrd`.`machine_room` WHERE  `id`=%s'
+    SQL_MACHINE_BY_ID_COLUMS = ('id','room_name','addr','ip_ranges')
+    sql = SQL_MACHINE_BY_ID
+    args = (id,)
+    rt_cnt, rt_list = execu_sql(sql,args,True)
+    return {} if rt_list is None else dict(zip(SQL_MACHINE_BY_ID_COLUMS, (rt_list[0][0],rt_list[0][1],rt_list[0][2],rt_list[0][3])))
+
+
+
+'''
+机房修改信息，合法性检查
+返回值 True/False
+'''
+def validate_machine_modify(id,room_name,addr,ip_ranges):
+    if not get_machine_by_id(id):
+        return False, 'machine is not found'
+    if room_name.strip() == '':
+        return False, 'username is empty'
+    if addr.strip() == '':
+        return False, 'addr  is empty'
+    if ip_ranges.strip() == '':
+        return False, 'ip_ranges is empty'
+    print id
+    SQL_VALIDATE_MACHINE_MODIFY ='SELECT  `room_name` FROM `zrd`.`machine_room` WHERE  `id`!=%s AND room_name=%s'
+    sql = SQL_VALIDATE_MACHINE_MODIFY
+    args = (id,room_name)
+    rt_cnt , rt_list = execu_sql(sql,args,False)
+    print rt_cnt
+    # 已用机房存在返回的值 必然不是0
+    if rt_cnt != 0:
+        return False, 'room_name is same to other'
+    return True, ''
+
+
+
+'''
+保存机房修改信息
+'''
+def machine_modify(id,room_name,addr,ip_ranges):
+    SQL_MACHINE_MODIFY = 'UPDATE `zrd`.`machine_room` SET `room_name`=%s, `addr`=%s, `ip_ranges`=%s WHERE  `id`=%s'
+    sql = SQL_MACHINE_MODIFY
+    args = (room_name,addr,ip_ranges,id)
+    rt_cnt , rt_list = execu_sql(sql,args,False)
     return True
 
-def machine_room_delete(mrid):
-    dbutils.execute_sql(SQL_MACHINE_ROOM_DELETE, (mrid, ), False)
+
+"""
+删除机房信息
+"""
+def delete_machine(id):
+    SQL_MACHINE_DELETE = 'DELETE FROM `zrd`.`machine_room` WHERE  `id`=%s'
+    sql = SQL_MACHINE_DELETE
+    args = (id,)
+    rt_cnt , rt_list = execu_sql(sql,args,False)
     return True
 
+
+
+# ----------------------------------------------
+'''
+获取资产列表
+'''
+def get_assets():
+    SQL_ASSET_LIST_SQL_COLUMNS = 'id,sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status'.split(',')
+    SQL_ASSET_LIST_SQL = 'SELECT id,sn,hostname,os,ip, machine_room_id, vendor, model, ram, cpu, disk, time_on_shelves, over_guaranteed_date, buiness, admin, status FROM asset WHERE status != 2'
+    rt_cnt,rt_list = execu_sql(SQL_ASSET_LIST_SQL,(),True)
+    assets = []
+    for rt in rt_list:
+        # 取出数据转换成字典格式
+        asset = dict(zip(SQL_ASSET_LIST_SQL_COLUMNS,rt))
+        # 使用datetime将时间转换为字符串, json无法解析非str类型
+        for key in 'time_on_shelves,over_guaranteed_date'.split(','):
+            if asset[key]:
+                asset[key] = asset[key].strftime('%Y-%m-%d')
+        assets.append(asset)
+    return assets
+'''
+获取资产ID
+'''
+def get_asset_by_id(aid):
+    GET_ASSET_BY_ID_COLUMNS = 'id,sn,hostname,os,ip,machine_room_id,vendor,model,ram,cpu,disk,time_on_shelves,over_guaranteed_date,buiness,admin,status'.split(',')
+    GET_ASSET_BY_ID = 'SELECT id,sn,hostname,os,ip, machine_room_id, vendor, model, ram, cpu, disk, time_on_shelves, over_guaranteed_date, buiness, admin, status FROM asset WHERE status != 2 AND id=%s'
+
+    rt_cnt,rt_list = execu_sql(GET_ASSET_BY_ID,(aid,),True)
+    assets = []
+    for rt in rt_list:
+        # 取出数据转换成字典格式
+        asset = dict(zip(GET_ASSET_BY_ID_COLUMNS,rt))
+        # 使用datetime将时间转换为字符串, json无法解析非str类型
+        for key in 'time_on_shelves,over_guaranteed_date'.split(','):
+            if asset[key]:
+                asset[key] = asset[key].strftime('%Y-%m-%d')
+        assets.append(asset)
+    # 防止数据为空,使用三元操作符
+    return assets[0] if assets else {}
+
+'''
+新增资产前 检查合法性
+'''
+def validate_asset_save(sn):
+    if sn.strip() == '':
+        return False, 'sn is empty'
+
+    #  只检查SN号是否有重复 其他不做检查
+    SQL_VALIDATE_ASSET_SAVE = 'SELECT  `sn` FROM asset WHERE sn=%s'
+    sql = SQL_VALIDATE_ASSET_SAVE
+    args = (sn,)
+    rt_cnt,rt_list = execu_sql(sql,args,True)
+    if rt_cnt:
+        return False,'sn is same'
+    return True, ''
+'''
+新增资产
+'''
+def asset_save(sn, hostname, os, ip, machine_room_id, vendor, model, ram, cpu, disk, time_on_shelves, over_guaranteed_date, buiness,  status):
+    SQL_ASSET_SAVE = 'INSERT INTO asset (sn, hostname, os, ip, machine_room_id, vendor, model, ram, cpu, disk, time_on_shelves, over_guaranteed_date, buiness,  status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+    sql = SQL_ASSET_SAVE
+    args = (sn, hostname, os, ip, machine_room_id, vendor, model, ram, cpu, disk, time_on_shelves, over_guaranteed_date, buiness, status)
+    rt_cnt,rt_list = execu_sql(sql,args,False)
+
+    # 保存信息影响一行，否则都是不通过
+    if rt_cnt == 1:
+        return True,''
+    return False,'保存信息失败'
+
+
+'''
+更新资产前，检查合法性
+'''
+def validate_asset_update(aid,sn,hostname):
+    if hostname.strip('') =='':
+        return False,u'主机名不能为空'
+    SQL_VALIDATE_ASSET_UPDATE='SELECT * FROM asset WHERE id=%s AND sn=%s'
+    # 防止id 和 sn 被修改
+    sql = SQL_VALIDATE_ASSET_UPDATE
+    args = (aid,sn)
+    rt_cnt,rt_list = execu_sql(sql,args,True)
+    if rt_cnt != 1:
+        return False,u'sn或者id不能修改'
+    return True,''
+'''
+更新 资产
+'''
+def assets_update(sn, hostname, os, ip, machine_room_id,vendor, model, ram, cpu, disk, time_on_shelves,over_guaranteed_date, buiness,status,aid):
+    SQL_ASSET_UPDATE='UPDATE asset SET sn=%s,hostname=%s,os=%s,ip=%s,machine_room_id=%s,vendor=%s,model=%s,ram=%s,cpu=%s,disk=%s,time_on_shelves=%s,over_guaranteed_date=%s, buiness=%s, status=%s WHERE  `id`=%s'
+    sql = SQL_ASSET_UPDATE
+    args = (sn, hostname, os, ip, machine_room_id,vendor, model, ram, cpu, disk, time_on_shelves,over_guaranteed_date, buiness,status,aid)
+    rt_cnt,rt_list = execu_sql(sql,args,False)
+    return True if rt_cnt else False
+
+
+"""
+删除资产信息
+"""
+def delete_asset(aid):
+    SQL_ASSET_DELETE = 'DELETE FROM asset WHERE  `id`=%s'
+    sql = SQL_ASSET_DELETE
+    args = (aid,)
+    rt_cnt , rt_list = execu_sql(sql,args,False)
+    return True
+
+
+
+# ---------------------------------------------
+'''
+日志信息
+'''
 def get_topn(src, topn=10):
     stat_dict = {}
     fhandler = open(src, "rb")
@@ -145,95 +384,5 @@ def get_topn(src, topn=10):
     result = sorted(stat_dict.items(), key=lambda x:x[1])
     return result[:-topn - 1:-1]
 
-def get_assets():
-    rt_cnt, rt_list = dbutils.execute_sql(SQL_ASSET_LIST, (), True)
-    assets = []
-    machine_rooms = get_machine_rooms_index_by_id()
-    for rt in rt_list:
-        asset = dict(zip(SQL_ASSET_LIST_COLUMNS, rt))
-        for key in 'time_on_shelves,over_guaranteed_date'.split(','):
-            if asset[key]:
-                asset[key] = asset[key].strftime('%Y-%m-%d')
-        asset['machine_room_name'] = machine_rooms.get(asset['machine_room_id'], {}).get('name', '')
-        assets.append(asset)
-    return assets
-
-def validate_asset_save(req):
-    # return False, 'AAA'  # 验证失败 弹出框
-    return True, ''
-
-def asset_save(req):
-    values = []
-    for column in SQL_ASSET_SAVE_COLUMNS:
-        values.append(req.get(column, ''))
-
-    rt_cnt, _ = dbutils.execute_sql(SQL_ASSET_SAVE, values, False)
-    return rt_cnt != 0
-
-def get_asset_by_id(aid):
-    rt_cnt, rt_list = dbutils.execute_sql(SQL_ASSET_BY_ID, (aid,), True)
-    assets = []
-    for rt in rt_list:
-        asset = dict(zip(SQL_ASSET_LIST_COLUMNS, rt))
-        for key in 'time_on_shelves,over_guaranteed_date'.split(','):
-            if asset[key]:
-                asset[key] = asset[key].strftime('%Y-%m-%d')
-        assets.append(asset)
-    return assets[0] if assets else {}
-
-def validate_asset_modify(req):
-    return True, ''
-
-def asset_modify(req):
-    values = []
-    for column in SQL_ASSET_MODIFY_COLUMNS:
-        values.append(req.get(column, ''))
-    values.append(req.get('id', 0))
-    print SQL_ASSET_MODIFY
-    print values
-    rt_cnt, _ = dbutils.execute_sql(SQL_ASSET_MODIFY, values, False)
-    return True
-
-def asset_delete(aid):
-    dbutils.execute_sql(SQL_ASSET_DELETE, (aid, ), False)
-    return True
-
-# ###########################33
-#   monitor
-###################print
-def monitor_host_create(req):
-    SQL_MONITOR_HOST_CREATE = 'insert into monitor_host(ip, mem, cpu, disk, m_time, r_time) values(%s, %s, %s, %s, %s, %s)'
-    values = []
-    for key in ['ip', 'mem', 'cpu', 'disk', 'm_time']:
-        values.append(req.get(key, ''))
-    values.append(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    # print '----',values
-    dbutils.execute_sql(SQL_MONITOR_HOST_CREATE, values, False)
-    return True
-
-
-def monitor_host_list(ip):
-    start_time = (datetime.datetime.now() - datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')
-    rt_cnt, rt_list = dbutils.execute_sql(SQL_MONITOR_HOST_LIST, (ip,start_time), True)
-    categoy_list, cpu_list, disk_list, mem_list = [], [], [],[]
-    for line in rt_list:
-        categoy_list.append(line[0].strftime("%H:%M"))
-        cpu_list.append(line[1])
-        mem_list.append(line[2])
-        disk_list.append(line[3])
-    return{
-      'categories' : categoy_list,
-      'series' : [{
-          'name': 'CPU',
-          'data': cpu_list
-      }, {
-          'name': u'内存',
-          'data': mem_list
-      }, {
-          'name': u'磁盘',
-          'data': disk_list
-      }]
-    }
-
-if __name__ == '__main__':
-    pass
+if __name__ == "__main__":
+    print assets_update('sn2','host2','bsd1','192.168.1.21',2,'hp','380',2048,4,500,'2016-11-02','2016-11-23','dev',0,2)
