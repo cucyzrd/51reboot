@@ -298,6 +298,31 @@ def get_asset_by_id(aid):
         assets.append(asset)
     # 防止数据为空,使用三元操作符
     return assets[0] if assets else {}
+'''
+更新资产前，检查合法性
+'''
+def validate_asset_update(aid,sn,hostname):
+    if hostname.strip('') =='':
+        return False,u'主机名不能为空'
+    SQL_VALIDATE_ASSET_UPDATE='SELECT * FROM asset WHERE id=%s AND sn=%s'
+    # 防止id 和 sn 被修改
+    sql = SQL_VALIDATE_ASSET_UPDATE
+    args = (aid,sn)
+    rt_cnt,rt_list = execu_sql(sql,args,True)
+    if rt_cnt != 1:
+        return False,u'sn或者id不能修改'
+    return True,''
+'''
+更新 资产
+'''
+def assets_update(sn, hostname, os, ip, machine_room_id,vendor, model, ram, cpu, disk, time_on_shelves,over_guaranteed_date, buiness,status,aid):
+    SQL_ASSET_UPDATE='UPDATE asset SET sn=%s,hostname=%s,os=%s,ip=%s,machine_room_id=%s,vendor=%s,model=%s,ram=%s,cpu=%s,disk=%s,time_on_shelves=%s,over_guaranteed_date=%s, buiness=%s, status=%s WHERE  `id`=%s'
+    sql = SQL_ASSET_UPDATE
+    args = (sn, hostname, os, ip, machine_room_id,vendor, model, ram, cpu, disk, time_on_shelves,over_guaranteed_date, buiness,status,aid)
+    rt_cnt,rt_list = execu_sql(sql,args,False)
+    return True if rt_cnt else False
+
+
 # ---------------------------------------------
 '''
 日志信息
@@ -317,4 +342,4 @@ def get_topn(src, topn=10):
     return result[:-topn - 1:-1]
 
 if __name__ == "__main__":
-    get_assets()
+    print assets_update('sn2','host2','bsd1','192.168.1.21',2,'hp','380',2048,4,500,'2016-11-02','2016-11-23','dev',0,2)

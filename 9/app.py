@@ -227,7 +227,28 @@ def asset_view():
 '''
 @app.route('/asset/update/',methods=['POST'])
 def asset_update():
-    return json.dumps({'error' :''})
+    a = request.form
+    aid =  a.get('id',0)
+    sn =  a.get('sn',0)
+    hostname =  a.get('hostname',0)
+    ip =  a.get('ip',0)
+    os =  a.get('os',0)
+    ram =  a.get('ram',0)
+    cpu =  a.get('cpu',0)
+    disk = a.get('disk',0)
+    buiness =  a.get('buiness',0)
+    machine_room_id =  a.get('machine_room_id',0)
+    time_on_shelves =  a.get('time_on_shelves',0)
+    over_guaranteed_date =  a.get('over_guaranteed_date',0)
+    vendor =  a.get('vendor',0)
+    model =  a.get('model',0)
+    status =  a.get('status',0)
+    # print 'over_guaranteed_date:',over_guaranteed_date
+    _ok,_error = models.validate_asset_update(aid,sn,hostname)
+    if _ok:
+        models.assets_update(sn, hostname, os, ip, machine_room_id,vendor, model, ram, cpu, disk, time_on_shelves,over_guaranteed_date, buiness,status,aid)
+        return json.dumps({'error': ''})
+    return json.dumps({'code':400,'error' :_error})
 
 
 # ----------------------------
