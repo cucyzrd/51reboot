@@ -19,12 +19,12 @@
 {% block content %}
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary " data-toggle="modal" data-target="#create_dialog">
+<button type="button" class="btn btn-primary " data-toggle="modal" data-target="#create-dialog">
  添加资产
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="create_dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="create-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -389,7 +389,18 @@ http://www.htmleaf.com/Demo/201502041325.html
         jQuery('.create-form').serializeArray(),
     function (data) {
        if(data['code'] === 200 ){
-            window.location.reload();
+            $('#create-dialog').modal('hide');
+            table.api().ajax.reload();
+                    swal({
+                        title: '添加成功',
+                        text: "",
+                        type: "success",
+                        showCancelButton: false, // 显示不显示取消按钮 错误的时候不需要显示
+                      //  confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "确认!",
+                        closeOnConfirm: false   // 自动关闭
+                    });
+            //window.location.reload();
         } else if (data['code'] === 400){
           //  alert(data['error']);
                     swal({
