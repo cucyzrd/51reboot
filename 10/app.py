@@ -202,7 +202,9 @@ def delete_machine():
 @app.route('/assets/')
 def assets_index():
     if session.get('user') is None: return redirect('/')   # 如果用户session为空直接跳转到首页
-    return render_template('assets.html')
+    machine_rooms = models.get_machine_rooms()
+    print machine_rooms
+    return render_template('assets.html',machine_rooms=machine_rooms)
 
 '''
 获取资产列表

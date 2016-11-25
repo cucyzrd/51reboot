@@ -259,7 +259,11 @@ def delete_machine(id):
     rt_cnt , rt_list = execu_sql(sql,args,False)
     return True
 
-
+def get_machine_rooms():
+    SQL_MACHINE_ROOM_LIST = 'select id, room_name, addr, ip_ranges from machine_room'
+    SQL_MACHINE_ROOM_COLUMNS = ('id', 'room_name', 'addr', 'ip_ranges')
+    rt_cnt, rt_list = execu_sql(SQL_MACHINE_ROOM_LIST, (), True)
+    return [dict(zip(SQL_MACHINE_ROOM_COLUMNS, rt)) for rt in rt_list]
 
 # ----------------------------------------------
 '''
