@@ -1,0 +1,56 @@
+2016-12-16 14:41:38,898 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:41:38,900 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='92'
+2016-12-16 14:41:38,901 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:41:38,901 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='92'
+2016-12-16 14:42:28,556 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:42:28,558 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='92'
+2016-12-16 14:42:28,559 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:42:28,561 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='92'
+2016-12-16 14:47:22,040 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:47:22,042 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='92'
+2016-12-16 14:47:22,043 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:47:22,045 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='92'
+2016-12-16 14:47:22,436 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:47:22,437 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='92'
+2016-12-16 14:47:22,437 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:47:22,438 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='92'
+2016-12-16 14:47:45,367 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:47:45,368 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='92'
+2016-12-16 14:47:45,368 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:47:45,369 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='92'
+2016-12-16 14:47:45,789 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:47:45,789 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='92'
+2016-12-16 14:47:45,792 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:47:45,792 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='92'
+2016-12-16 14:48:09,778 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:48:31,351 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='38'
+2016-12-16 14:48:36,806 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:48:41,937 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='72'
+2016-12-16 14:48:47,138 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='72'
+2016-12-16 14:48:56,460 db.py [line:28]-list  INFO sql: select id,hostname,lan_ip,wan_ip,cabinet_id,op,phone from server
+2016-12-16 14:48:56,461 db.py [line:42]-list  INFO sql: select id,name,idc_id,u_num,power from cabinet where id='8'
+2016-12-16 14:48:59,930 db.py [line:28]-list  INFO sql: select id,name,idc_id,u_num,power from cabinet
+2016-12-16 14:49:02,855 db.py [line:28]-list  INFO sql: select id,hostname,lan_ip,wan_ip,cabinet_id,op,phone from server
+2016-12-16 14:49:02,855 db.py [line:42]-list  INFO sql: select id,name,idc_id,u_num,power from cabinet where id='8'
+2016-12-16 14:49:06,836 db.py [line:28]-list  INFO sql: select id,name,name_cn,address,adminer,phone,num from idc
+2016-12-16 14:49:13,351 db.py [line:28]-list  INFO sql: select id,apply_date,apply_type,apply_desc,deal_persion,status,deal_desc,deal_time,apply_persion from ops_jobs
+2016-12-16 14:49:22,285 db.py [line:42]-list  INFO sql: select id,apply_date,apply_type,apply_desc,deal_persion,status,deal_desc,deal_time,apply_persion from ops_jobs where id='37'
+2016-12-16 14:49:31,321 db.py [line:28]-list  INFO sql: select id,update_date,update_persion,project,message from code
+2016-12-16 14:49:47,987 db.py [line:28]-list  INFO sql: select id,apply_date,apply_type,apply_desc,deal_persion,status,deal_desc,deal_time,apply_persion from ops_jobs
+2016-12-16 14:49:51,089 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:49:52,984 db.py [line:28]-list  INFO sql: select id,hostname,lan_ip,wan_ip,cabinet_id,op,phone from server
+2016-12-16 14:49:52,986 db.py [line:42]-list  INFO sql: select id,name,idc_id,u_num,power from cabinet where id='8'
+2016-12-16 14:49:54,759 db.py [line:28]-list  INFO sql: select id,name,name_cn,address,adminer,phone,num from idc
+2016-12-16 14:49:57,411 db.py [line:28]-list  INFO sql: select id,name,idc_id,u_num,power from cabinet
+2016-12-16 14:49:57,417 db.py [line:42]-list  INFO sql: select id,name,name_cn,address,adminer,phone,num from idc where id='2'
+2016-12-16 14:49:58,703 db.py [line:28]-list  INFO sql: select id,apply_date,apply_type,apply_desc,deal_persion,status,deal_desc,deal_time,apply_persion from ops_jobs
+2016-12-16 14:50:35,068 db.py [line:42]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users where id='38'
+2016-12-16 14:50:37,990 db.py [line:28]-list  INFO sql: select id,hostname,lan_ip,wan_ip,cabinet_id,op,phone from server
+2016-12-16 14:50:37,994 db.py [line:42]-list  INFO sql: select id,name,idc_id,u_num,power from cabinet where id='8'
+2016-12-16 14:50:41,642 db.py [line:28]-list  INFO sql: select id,name,idc_id,u_num,power from cabinet
+2016-12-16 14:50:41,644 db.py [line:42]-list  INFO sql: select id,name,name_cn,address,adminer,phone,num from idc where id='2'
+2016-12-16 14:50:45,486 db.py [line:28]-list  INFO sql: select id,name,name_cn,address,adminer,phone,num from idc
+2016-12-16 14:50:45,509 db.py [line:42]-list  INFO sql: select id,name,idc_id,u_num,power from cabinet where id='8'
+2016-12-16 14:53:22,122 db.py [line:28]-list  INFO sql: select id,name,name_cn,password,email,email_password,mobile,role,status from users
+2016-12-16 14:54:25,678 db.py [line:28]-list  INFO sql: select id,hostname,lan_ip,wan_ip,cabinet_id,op,phone from server
+2016-12-16 14:54:25,680 db.py [line:42]-list  INFO sql: select id,name,idc_id,u_num,power from cabinet where id='8'
