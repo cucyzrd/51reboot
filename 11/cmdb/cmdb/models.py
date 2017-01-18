@@ -288,3 +288,5 @@ def get_alerts():
 if __name__ == '__main__':
     for i in xrange(100):
         user_save('name-%s' % i, '123456', 29)
+
+
