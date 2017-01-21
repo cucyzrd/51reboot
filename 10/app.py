@@ -16,7 +16,7 @@ sys.setdefaultencoding('utf-8')
 
 #创建Flask对象
 app = Flask(__name__)
-app.secret_key= 'ddddddddddddddddddddfgddddddddddddddddddddddddddddddddd'
+app.secret_key= 'dddddddddddddddddd'
 
 #/ ==> index........
 @app.route('/')
