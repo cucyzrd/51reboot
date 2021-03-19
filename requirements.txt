@@ -49,7 +49,7 @@ ipython==5.1.0
 ipython-genutils==0.1.0
 isort==4.2.5
 itsdangerous==0.24
-Jinja2==2.8
+Jinja2==2.11.3
 jsonschema==2.5.1
 jsonxs==0.3
 jupyter-client==4.4.0
