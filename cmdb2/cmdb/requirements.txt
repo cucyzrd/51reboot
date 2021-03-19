@@ -37,7 +37,7 @@ ipapython==4.2.0
 IPy==0.75
 itsdangerous==0.24
 javapackages==1.0.0
-Jinja2==2.7.2
+Jinja2==2.11.3
 kerberos==1.1
 kitchen==1.1.1
 kmod==0.1
