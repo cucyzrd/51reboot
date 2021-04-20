@@ -1,4 +1,4 @@
-ansible==2.2.0.0
+ansible==2.9.20
 APScheduler==2.1.2
 Babel==0.9.6
 backports.ssl-match-hostname==3.4.0.2
