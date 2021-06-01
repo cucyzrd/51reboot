@@ -104,7 +104,7 @@ slip.dbus==0.4.0
 SSSDConfig==1.13.0
 targetcli-fb===2.1.fb41
 urlgrabber==3.10
-urllib3==1.10.2
+urllib3==1.26.5
 urwid==1.1.1
 uuid==1.30
 uWSGI==2.0.14
