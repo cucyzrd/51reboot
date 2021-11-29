@@ -77,7 +77,7 @@ python-dateutil==1.5
 python-default-encoding==0.1
 python-dmidecode==3.10.13
 python-keyczar==0.71rc0
-python-ldap==2.4.15
+python-ldap==3.4.0
 python-meh==0.25.2
 python-nmap==0.6.1
 python-nss==0.16.0
