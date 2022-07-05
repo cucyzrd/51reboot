@@ -94,7 +94,7 @@ redis==2.10.5
 reportlab==3.3.0
 requests==2.12.4
 rtslib-fb==2.1.57
-salt==2015.5.10
+salt==3003.5
 seobject==0.1
 sepolicy==1.1
 setroubleshoot==1.1
