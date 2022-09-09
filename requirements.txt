@@ -63,7 +63,7 @@ Mako==1.0.6
 MarkupSafe==0.23
 maxminddb==1.2.2
 mccabe==0.5.2
-mistune==0.7.3
+mistune==0.8.1
 mock==2.0.0
 MySQL-python==1.2.5
 nbconvert==4.2.0
