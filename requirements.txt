@@ -59,7 +59,7 @@ lazy-object-proxy==1.2.2
 legacy==0.1.6
 lockfile==0.12.2
 logilab-common==1.2.2
-Mako==1.0.6
+Mako==1.2.2
 MarkupSafe==0.23
 maxminddb==1.2.2
 mccabe==0.5.2
